@@ -20,6 +20,8 @@
     <JAVADOC>
       <root url="https://www.scala-lang.org/api/2.11.8/" />
     </JAVADOC>
-    <SOURCES />
+    <SOURCES>
+      <root url="jar://D:/Application/scala-2.11.8/lib/scala-actors-2.11.0.jar!/" />
+    </SOURCES>
   </library>
 </component>
