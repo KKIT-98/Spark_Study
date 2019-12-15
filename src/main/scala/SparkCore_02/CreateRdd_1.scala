@@ -1,7 +1,5 @@
 package SparkCore_02
-
 import org.apache.spark.rdd.RDD
-
 //创建RDD方式一:使用集合创建RDD
 object CreateRdd_1 {
   def main(args: Array[String]): Unit = {

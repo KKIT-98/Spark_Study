@@ -1,8 +1,6 @@
 package SparkCore_03
-
 import org.apache.spark.SparkContext
 import org.apache.spark.rdd.RDD
-
 import scala.collection.mutable
 
 /*Action算子*/

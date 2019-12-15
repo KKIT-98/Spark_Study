@@ -14,16 +14,21 @@ object EasyTransformationOperatorDemo {
     println("---------------使用map算子将rdd中的元素放大2倍-------------")
     val rdd2: RDD[Int] = rdd.map(_ * 2)
     println(rdd2.collect().toBuffer)
+    //运行结果:ArrayBuffer(2, 4, 6, 8, 10, 12)
     //2.filter对RDD中每一个元素执行Boolean类型表达式,结果为true的值存储到新的RDD中
     val rdd3: RDD[Int] = rdd.filter(_ > 2)
     println("---------------使用filter算子将rdd中的元素大于2的放入新RDD-------------")
     println(rdd3.collect().toBuffer)
+    //运行结果:ArrayBuffer(3, 4, 5, 6)
     //3. flatMap对RDD中存在集合进行压平处理,将集合内部的数据取出存储到一个全新的RDD中
     val rdd4: RDD[String] = sc.parallelize(Array("a b c d", "e", "f d c"))
     val rdd5: RDD[String] = rdd4.flatMap(_.split(" "))
     println("---------------使用flatMap算子将rdd4中的元素进行压平处理-------------")
     println("rdd4:"+rdd4.collect().toBuffer)
     println(rdd5.collect().toBuffer)
+    //运行结果:
+    // rdd4:ArrayBuffer(a b c d, e, f d c)
+    //ArrayBuffer(a, b, c, d, e, f, d, c)
     /*注:map和FlatMap之间区别?
          这两者都是遍历RDD中数据,并对数据进行数据操作,并且会的到一个全新RDD
          Map多用于计算或处理一些特殊数据类型,不能使用扁平化处理的数据类型
@@ -43,6 +48,9 @@ object EasyTransformationOperatorDemo {
     val rdd6_1: RDD[Int] = rdd6.sample(false, 0.3)
     println("rdd6"+rdd6.collect().toBuffer)
     println(rdd6_1.collect().toBuffer)
+    //运行结果:
+    // rdd6ArrayBuffer(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+    //ArrayBuffer(1, 2, 7, 8, 10, 11, 12, 13, 14, 15)
     //5、union :求两个rdd的并集
     val rdd7_1: RDD[Int] = sc.parallelize(List(5, 6, 7, 8))
     val rdd7_2: RDD[Int] = sc.parallelize(List(1, 2, 5, 6))
@@ -51,15 +59,24 @@ object EasyTransformationOperatorDemo {
     println( rdd7_1.collect.toBuffer)
     println( rdd7_2.collect.toBuffer)
     println( rdd7.collect.toBuffer)
+    //运行结果:
+    // ArrayBuffer(5, 6, 7, 8)
+    //ArrayBuffer(1, 2, 5, 6)
+    //ArrayBuffer(5, 6, 7, 8, 1, 2, 5, 6)
     //6、intersection :求两个rdd的交集
     val rdd7_jiaoji: RDD[Int] = rdd7_1 intersection rdd7_2
     println("---------------两个rdd的交集----------------")
     println( rdd7_jiaoji.collect.toBuffer)
+    //运行结果:
+    //ArrayBuffer(6, 5)
     //7、distinct :去重
     println("---------------去重----------------")
     val rdd8: RDD[Int] = sc.parallelize(List(1, 3, 4, 5, 6, 34, 3, 2, 3))
     println(rdd8.collect().toBuffer)
     println(rdd8.distinct().collect().toBuffer)
+    //运行结果:
+    // ArrayBuffer(1, 3, 4, 5, 6, 34, 3, 2, 3)
+    //ArrayBuffer(34, 4, 1, 6, 3, 5, 2)
     //8、Join ：相同key被合并,没有相同的key被舍弃掉
     val rdd9_1: RDD[(String, Int)] = sc.parallelize(List(("tom", 1), ("jerry", 3), ("kitty", 2)))
     val rdd9_2: RDD[(String, Int)] = sc.parallelize(List(("jerry", 2), ("tom", 2), ("dog", 10)))
@@ -68,16 +85,24 @@ object EasyTransformationOperatorDemo {
     println( rdd9_1.collect.toBuffer)
     println( rdd9_2.collect.toBuffer)
     println( rdd9.collect.toBuffer)
+    //运行结果:
+    // ArrayBuffer((tom,1), (jerry,3), (kitty,2))
+    //ArrayBuffer((jerry,2), (tom,2), (dog,10))
+    //ArrayBuffer((tom,(1,2)), (jerry,(3,2)))
     //9、leftOuterJoin和rightouterJoin：无论是左连接还是右连接,除了基本值外 ,剩余值的数据类型是Option类型
     val left: RDD[(String, (Int, Option[Int]))] = rdd9_1 leftOuterJoin rdd9_2
     val right: RDD[(String, (Option[Int], Int))] = rdd9_1 rightOuterJoin rdd9_2
     println("---------------左连接右连接---------------")
     println("left:"+left.collect().toBuffer)
     println("right:"+right.collect().toBuffer)
+    //运行结果:
+    // left:ArrayBuffer((tom,(1,Some(2))), (jerry,(3,Some(2))), (kitty,(2,None)))
+    //right:ArrayBuffer((tom,(Some(1),2)), (dog,(None,10)), (jerry,(Some(3),2)))
     //11、cartesian:笛卡尔积
     val dcart: RDD[((String, Int), (String, Int))] = rdd9_1 cartesian rdd9_2
     println("---------------笛卡尔积-----------------")
     println(dcart.collect().toBuffer)
+    //运行结果:ArrayBuffer(((tom,1),(jerry,2)), ((tom,1),(tom,2)), ((tom,1),(dog,10)), ((jerry,3),(jerry,2)), ((jerry,3),(tom,2)), ((jerry,3),(dog,10)), ((kitty,2),(jerry,2)), ((kitty,2),(tom,2)), ((kitty,2),(dog,10)))
     //10、分组:groupBy   groupByKey  cogroup
     //groupBy ：根据传入的参数分组
     val rdd10: RDD[(String, Int)] = sc.parallelize(List(("jerry", 2), ("tom", 2), ("dog", 10),("dog",22),("Tom",3)))
@@ -85,17 +110,27 @@ object EasyTransformationOperatorDemo {
     println("----------------分组（对传入参数进行分组，这里是按第一个参数）-----------------")
     println(rdd10.collect().toBuffer)
     println(rdd10_1.collect().toBuffer)
+    //运行结果:
+    // ArrayBuffer((jerry,2), (tom,2), (dog,10), (dog,22), (Tom,3))
+    //ArrayBuffer((Tom,CompactBuffer((Tom,3))), (tom,CompactBuffer((tom,2))), (dog,CompactBuffer((dog,10), (dog,22))), (jerry,CompactBuffer((jerry,2))))
     //groupByKey:根据key进行分组 对kv形式使用除了指定分组之后分区数量之外, 还可以使用自定义分区器
     val groupbykey: RDD[(String, Iterable[Int])] = rdd10.groupByKey()
     println("---------------分组（根据key进行分组 ）-----------------")
     println(rdd10.collect().toBuffer)
     println(groupbykey.collect().toBuffer)
+    //运行结果:
+    // ArrayBuffer((jerry,2), (tom,2), (dog,10), (dog,22), (Tom,3))
+    //ArrayBuffer((Tom,CompactBuffer(3)), (tom,CompactBuffer(2)), (dog,CompactBuffer(10, 22)), (jerry,CompactBuffer(2)))
    //cogroup:根据key进行分组(分组必须是一个对偶元组)
    val cogroup: RDD[(String, (Iterable[Int], Iterable[Int]))] = rdd9_1 cogroup rdd9_2
     println("---------------分组cogroup（根据key进行分组 ）-----------------")
     println( rdd9_1.collect.toBuffer)
     println( rdd9_2.collect.toBuffer)
     println( cogroup.collect.toBuffer)
+    //运行结果:
+    // ArrayBuffer((tom,1), (jerry,3), (kitty,2))
+    //ArrayBuffer((jerry,2), (tom,2), (dog,10))
+    //ArrayBuffer((tom,(CompactBuffer(1),CompactBuffer(2))), (dog,(CompactBuffer(),CompactBuffer(10))), (jerry,(CompactBuffer(3),CompactBuffer(2))), (kitty,(CompactBuffer(2),CompactBuffer())))
     //关闭SparkContext对象
     sc.stop()
     /* 
