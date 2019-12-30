@@ -1,3 +1,4 @@
+/*
 package SparkSQL_01
 
 import org.apache.spark.{SparkConf, SparkContext}
@@ -34,3 +35,4 @@ object RDDToDataSet {
   }
 }
 case class Peoples(Name:String,Age:Int)
+*/
